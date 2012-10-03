@@ -4,8 +4,18 @@ This is a simple program to keep track of an inventory database.
 It reads commands from stdin, and updates a database file specified
 on the command line.
 
-## Features ##
+### Features ###
 
+Extra credit features implemented:
+
+* Sort on quantity works numerically.
+* Remove works with a pattern that can be applied to any field
+  (or multiple fields)
+
+In addition, multiple values can be updated with only one command (with the
+same pattern-matching syntax as works with delete),
+and the output can be sorted down to the minutest detail (you can specify
+an arbitrary number of fields to sort by, in preferential order).
 
 ### Data storage design ###
 
