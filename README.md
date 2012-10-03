@@ -24,10 +24,10 @@ return an error.
 
 The following commands are supported:
 
-    add &lt;full JSON object&gt;
-    remove &lt;match pattern&gt;
-    change &lt;match pattern&gt; &lt;modification&gt;
-    list \[match pattern] \[sort specification]
+    add <full JSON object>
+    remove <match pattern>
+    change ,match pattern> <modification>
+    list [match pattern] [sort specification]
 
 
 Match patterns are partial JSON objects. All three of the following match the
