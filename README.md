@@ -11,8 +11,8 @@ on the command line.
 
 The database files are composed of JSON objects, separated by newlines:
 
-  {"part-id":"a123","footprint":"dip6","description":"Digital IMU","quantity":4}
-  {"part-id":"a124","footprint":"dip6","description":"Digital IMU","quantity":4}
+    {"part-id":"a123","footprint":"dip6","description":"Digital IMU","quantity":4}
+    {"part-id":"a124","footprint":"dip6","description":"Digital IMU","quantity":4}
 
 ## Protocol design ##
 
@@ -24,24 +24,25 @@ return an error.
 
 The following commands are supported:
 
-   add &lt;full JSON object&gt;
-   remove &lt;match pattern&gt;
-   change &lt;match pattern&gt; &lt;modification&gt;
-   list \[match pattern] \[sort specification]
+    add &lt;full JSON object&gt;
+    remove &lt;match pattern&gt;
+    change &lt;match pattern&gt; &lt;modification&gt;
+    list \[match pattern] \[sort specification]
 
 
 Match patterns are partial JSON objects. All three of the following match the
 above-specified part:
 
-  {"part-id":"a123"}
-  {"footprint":"dip6"}
-  {"part-id":"a123", "footprint":"dip6"}
+    {"part-id":"a123"}
+    {"footprint":"dip6"}
+    {"part-id":"a123", "footprint":"dip6"}
 
 The empty match pattern, {}, matches everything.
 
 Modifications are basically identical to match patterns. The following
 command would change the description of the above-specified part to "This
 is a digital IMU with I2C".
+
      change {"part-id":"a123"} {"description":"This is a digital IMU with I2C"}
 
 Sort specifications are JSON lists of field names, which order the output
