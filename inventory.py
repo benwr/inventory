@@ -1,7 +1,8 @@
 #!/usr/bin/env python2 
+
 # The data files are newline-separated JSON objects representing each part,
 #   like this:
-# {"part-id":"a123","footprint":"dip6",description":"Digital IMU","quantity":4}
+# {"part-id":"a123","footprint":"dip6","description":"Digital IMU","quantity":4}
 
 # Supported commands are:
 #   add <full JSON object>
@@ -26,11 +27,10 @@
 #   part number, this sort specification would do it for you:
 #     ["quantity", "part-id"]
 
-import json
 import argparse
-import tempfile
-import shutil
-import os
+import json
+import re
+import os, shutil, tempfile
 import sys
 
 def validate(part):
@@ -102,6 +102,7 @@ def add(partDict, filename):
       yield part
 
   writeout(addIter(partDict), filename)
+  return "OK"
 
 
 def remove(pattern, filename):
@@ -111,6 +112,8 @@ def remove(pattern, filename):
 
   removeIter = (record for record in parts(filename) if not match(pattern, record))
   writeout(removeIter, filename)
+
+  return("OK")
 
 
 def replace(newfields, record):
@@ -124,6 +127,7 @@ def update(pattern, newfields, filename):
   updateIter = (replace(newfields, record) if match(pattern, record) else record for record in parts(filename))
   
   writeout(updateIter, filename)
+  return "OK"
 
 def find(pattern, sort):
   def compare(left, right):
@@ -142,6 +146,44 @@ def find(pattern, sort):
   result.sort(cmp=compare)
   return result
 
+def printfields(lst):
+  fstring = "%10s %40s %10s %10s"
+  print fstring % ("Part ID","Description","Footprint","Quantity")
+  for r in lst:
+    print fstring % (r['part-id'], r['description'], r['footprint'], str(r['quantity']))
+
+
+def run(database):
+  for line in sys.stdin:
+    op = line.split(None, 1)
+    if (len(op) < 2):
+      op.extend([' ',' '])
+
+    operator = op[0]
+
+    if operator == "add":
+      print add(json.loads(op[1]), database)
+    elif operator == "remove":
+      print remove(json.loads(op[1]), database)
+    elif operator == "change":
+      matches = re.match(r'(?P<pat>\{.*\})\s+(?P<fields>\{.*\})\s*', op[1]).groupdict()
+      print update(json.loads(matches['pat']), json.loads(matches['fields']), filename)
+
+    elif operator == "list":
+      matches = re.match(r'(?P<pat>\{.*\})?\s*(?P<sort>\[.*\])?\s*', op[1]).groupdict()
+      pattern = {}
+      sort = ["part-id"]
+      if matches['pat']:
+        pattern = json.loads(matches['pat'])
+      if matches['sort']:
+        sort = json.loads(matches['sort'])
+
+      printfields(find(pattern, sort))
+
+
+    else:
+      print "Error: Unknown command " + operator
+    
 
 if __name__ == "__main__":
   parser = argparse.ArgumentParser(description="Keep track of a bill of materials.")
@@ -150,5 +192,4 @@ if __name__ == "__main__":
 
   filename = parser.parse_args().filename
 
-  add({"part-id":"a123","footprint":"dip6","description":"A thing","quantity":4}, filename)
-  update({"part-id":"a123"}, {"quantity":3, "footprint":"what"}, filename)
+  run(filename)
