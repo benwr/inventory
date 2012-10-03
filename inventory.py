@@ -121,12 +121,6 @@ def replace(newfields, record):
   
 
 def update(pattern, newfields, filename):
-#  def updateIter(pattern, newfields):
-#    for record in parts(filename):
-#      if match(pattern, record):
-#        yield replace(newfields, record)
-#      else:
-#        yield record
   updateIter = (replace(newfields, record) if match(pattern, record) else record for record in parts(filename))
   
   writeout(updateIter, filename)
