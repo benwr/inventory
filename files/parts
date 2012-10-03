@@ -1,0 +1,12 @@
+{"part-id": "a123", "footprint": "what", "description": "Digital IMU", "quantity": 4}
+{"part-id": "T5060", "footprint": "size 11", "description": "My cool part", "quantity": 4}
+{"part-id": "C86932", "footprint": "1206", "description": "CAP,CHIP,TANT,4.7uF,16V,20%", "quantity": 12}
+{"part-id": "C86933", "footprint": "2917", "description": "CAP,CHIP,TANT,1mF,2.5V,20%", "quantity": 5}
+{"part-id": "C87118", "footprint": "3010", "description": "CAP,CHIP,TANT,100uF,6V,20%", "quantity": 8}
+{"part-id": "R67811", "footprint": "0805", "description": "RES,100HM,1/8W,5%,SMD", "quantity": 15}
+{"part-id": "R67817", "footprint": "1206", "description": "RES,100HM,1/4W,1%,SMD", "quantity": 10}
+{"part-id": "T49046", "footprint": "8-SMD", "description": "Converter DC/DC 5V OUT 1W", "quantity": 1}
+{"part-id": "D30421", "footprint": "SOT-523", "description": "DIODE ZENER DUAL 6.8V", "quantity": 1}
+{"part-id": "R4700", "footprint": "1206", "description": "RES,500HM,1/4W,1%,SMD", "quantity": 5}
+{"part-id": "R67812", "footprint": "sip", "description": "Resistor", "quantity": 5}
+{"part-id": "R13218", "footprint": "sip", "extra": "readallaboutit", "description": "Resistor", "quantity": 5}

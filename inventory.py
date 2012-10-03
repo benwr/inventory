@@ -70,7 +70,7 @@ def parts(name):
         raise ValueError
       yield record
     except ValueError:
-      print >> sys.stderr, "Invalid record: " + line
+      print >> sys.stderr, "Clearing invalid record: " + line
 
 def writeout(iterator, filename):
   """Writes the values yielded by the 'iterator' argument to the file
@@ -100,20 +100,28 @@ def add(partDict, filename):
 
     if not updated:
       yield part
+  try:
+    validate(partDict)
 
-  writeout(addIter(partDict), filename)
-  return "OK"
+    writeout(addIter(partDict), filename)
+    return "OK"
+  except ValueError:
+    return "Error: Invalid part object."
 
 
 def remove(pattern, filename):
   if pattern == {}:
-    print "That would delete everything. If you want a new inventory, make a new file."
-    return
+    return "Error: If you want to delete the inventory, delete the database file."
 
-  removeIter = (record for record in parts(filename) if not match(pattern, record))
-  writeout(removeIter, filename)
+  try:
+    validatePattern(pattern)
 
-  return("OK")
+    removeIter = (record for record in parts(filename) if not match(pattern, record))
+    writeout(removeIter, filename)
+
+    return "OK"
+  except ValueError:
+    return "Error: Invalid matching pattern object."
 
 
 def replace(newfields, record):
@@ -124,10 +132,15 @@ def replace(newfields, record):
   
 
 def update(pattern, newfields, filename):
-  updateIter = (replace(newfields, record) if match(pattern, record) else record for record in parts(filename))
+  try:
+    validatePattern(pattern)
+    validatePattern(newfields)
+    updateIter = (replace(newfields, record) if match(pattern, record) else record for record in parts(filename))
   
-  writeout(updateIter, filename)
-  return "OK"
+    writeout(updateIter, filename)
+    return "OK"
+  except ValueError:
+    return "Error: Invalid matching pattern or modification object"
 
 def find(pattern, sort):
   def compare(left, right):
@@ -139,18 +152,27 @@ def find(pattern, sort):
         return 1
     return 0
 
-  result = []
-  for record in parts(filename):
-    if match(pattern, record):
-      result.append(record)
-  result.sort(cmp=compare)
-  return result
+  try:
+    validatePattern(pattern)
+    result = []
+    for record in parts(filename):
+      if match(pattern, record):
+        result.append(record)
+    result.sort(cmp=compare)
+    return result
+  except ValueError:
+    return "Error: Invalid matching pattern object."
 
 def printfields(lst):
-  fstring = "%10s %40s %10s %10s"
-  print fstring % ("Part ID","Description","Footprint","Quantity")
-  for r in lst:
-    print fstring % (r['part-id'], r['description'], r['footprint'], str(r['quantity']))
+  try:
+    fstring = "%10s %40s %10s %10s"
+    print fstring % ("Part ID","Description","Footprint","Quantity")
+    for r in lst:
+      print fstring % (r['part-id'], r['description'], r['footprint'], str(r['quantity']))
+
+    print "%%"
+  except TypeError:
+    print lst
 
 
 def run(database):
@@ -187,7 +209,7 @@ def run(database):
 
 if __name__ == "__main__":
   parser = argparse.ArgumentParser(description="Keep track of a bill of materials.")
-  parser.add_argument('-f', dest='filename', default="inventory.json", 
+  parser.add_argument('-f', '--file', dest='filename', default="inventory.json", 
     help="specifies the database file")
 
   filename = parser.parse_args().filename
