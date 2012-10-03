@@ -92,7 +92,7 @@ def add(partDict, filename):
     updated = False
     for record in parts(filename):
       if record["part-id"] == part["part-id"]:
-        print >> sys.stderr, "Warning: Part exists. Updating the total, but you may have meant to 'update'"
+        print >> sys.stderr, "Warning: Part exists. Adding to the total, but you may have meant to 'update'"
         record["quantity"] += part["quantity"]
         updated = True
 
@@ -109,15 +109,7 @@ def remove(pattern, filename):
     print "That would delete everything. If you want a new inventory, make a new file."
     return
 
-  #def removeIter(pattern, filename):
-  #  for record in parts(filename):
-  #    removed = match(pattern, record)
-
-  #    if not removed:
-  #      yield record
-
   removeIter = (record for record in parts(filename) if not match(pattern, record))
-
   writeout(removeIter, filename)
 
 
@@ -128,15 +120,16 @@ def replace(newfields, record):
   return record
   
 
-def update(patternDict, newFieldsDict, filename):
-  def updateIter(pattern, newfields):
-    for record in parts(filename):
-      if match(pattern, record):
-        yield replace(newfields, record)
-      else:
-        yield record
+def update(pattern, newfields, filename):
+#  def updateIter(pattern, newfields):
+#    for record in parts(filename):
+#      if match(pattern, record):
+#        yield replace(newfields, record)
+#      else:
+#        yield record
+  updateIter = (replace(newfields, record) if match(pattern, record) else record for record in parts(filename))
   
-  writeout(updateIter(patternDict, newFieldsDict), filename)
+  writeout(updateIter, filename)
 
 def find(pattern, sort):
   def compare(left, right):
@@ -163,5 +156,5 @@ if __name__ == "__main__":
 
   filename = parser.parse_args().filename
 
-  add({"part-id":"a123","footprint":"dip6","description":"Digital IMU","quantity":4}, filename)
-  update({"part-id":"a123"}, {"quantity":3}, filename)
+  add({"part-id":"a123","footprint":"dip6","description":"A thing","quantity":4}, filename)
+  update({"part-id":"a123"}, {"quantity":3, "footprint":"what"}, filename)
