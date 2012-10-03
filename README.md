@@ -7,14 +7,14 @@ on the command line.
 ## Features ##
 
 
-## Data storage design ##
+### Data storage design ###
 
 The database files are composed of JSON objects, separated by newlines:
 
     {"part-id":"a123","footprint":"dip6","description":"Digital IMU","quantity":4}
     {"part-id":"a124","footprint":"dip6","description":"Digital IMU","quantity":4}
 
-## Protocol design ##
+### Protocol design ###
 
 Most communication is done in JSON. To add a part, you must specify all
 fields in a JSON object, similar to what appears in the database file.
