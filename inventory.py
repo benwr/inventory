@@ -1,32 +1,5 @@
 #!/usr/bin/env python2 
 
-# The data files are newline-separated JSON objects representing each part,
-#   like this:
-# {"part-id":"a123","footprint":"dip6","description":"Digital IMU","quantity":4}
-
-# Supported commands are:
-#   add <full JSON object>
-#   remove <match pattern>
-#   change <match pattern> <modification>
-#   list [match pattern] [sort specification]
-
-# Match patterns are partial JSON objects. All three of the following match the
-#   above-specified part:
-#     {"part-id":"a123"}
-#     {"footprint":"dip6"}
-#     {"part-id":"a123", "footprint":"dip6"}
-#   The empty match pattern, {}, matches everything.
-
-# Modifications are basically identical to match patterns. The following
-#   command would change the description of the above-specified part to "This
-#   is a digital IMU with I2C".
-#     change {"part-id":"a123"} {"description":"This is a digital IMU with I2C"}
-
-# Sort specifications are JSON lists of field names, which order the output
-#   preferentially. If, for example, you want to rank by quantity and then by
-#   part number, this sort specification would do it for you:
-#     ["quantity", "part-id"]
-
 import argparse
 import json
 import re
