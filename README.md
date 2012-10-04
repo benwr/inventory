@@ -36,7 +36,7 @@ The following commands are supported:
 
     add <full JSON object>
     remove <match pattern>
-    change ,match pattern> <modification>
+    change <match pattern> <modification>
     list [match pattern] [sort specification]
 
 
